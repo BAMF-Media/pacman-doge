@@ -23,59 +23,7 @@ function geronimo() {
 
 	var mapConfig = "data/map.json";
 
-
-	/* AJAX stuff */
-	function getHighscore() {
-		setTimeout(ajax_get,30);
-	}
-	function ajax_get() {
-		var date = new Date().getTime();
-		$.ajax({
-		   datatype: "json",
-		   type: "GET",
-		   url: "data/db-handler.php",
-		   data: {
-			 timestamp: date,
-			 action: "get"
-			 },
-		   success: function(msg){
-			 $("#highscore-list").text("");
-			 for (var i = 0; i < msg.length; i++) {
-				$("#highscore-list").append("<li>"+msg[i]['name']+"<span id='score'>"+msg[i]['score']+"</span></li>");
-			 }
-		   } 
-		});
-	}
-	function ajax_add(n, s, l) {
-
-		$.ajax({
-		   type: 'POST',
-		   url: 'data/db-handler.php',
-		   data: {
-			 action: 'add',
-			 name: n,
-			 score: s,
-			 level: l
-			 },
-		   dataType: 'json',
-		   success: function(data) {
-				console.log('Highscore added: ' + data);
-				$('#highscore-form').html('<span class="button" id="show-highscore">View Highscore List</span>');
-			},
-			error: function(errorThrown) {
-				console.log(errorThrown);
-			}
-		});
-	}
-
-	function addHighscore() {
-			var name = $("input[type=text]").val();
-            $("#highscore-form").html("Saving highscore...");
-            ajax_add(name ,game.score.score, game.level);
-	}
-	
 	function buildWall(context,gridX,gridY,width,height) {
-		console.log("BuildWall");
 		width = width*2-1;
 		height = height*2-1;
 		context.fillRect(pacman.radius/2+gridX*2*pacman.radius,pacman.radius/2+gridY*2*pacman.radius, width*pacman.radius, height*pacman.radius);
@@ -149,7 +97,7 @@ function geronimo() {
 		};
 		this.gameOver = false;
 		this.canvas = $("#myCanvas").get(0);
-		this.wallColor = "Blue";
+		this.wallColor = "Black";
 		this.width = this.canvas.width;
 		this.height = this.canvas.height;
 
@@ -363,7 +311,7 @@ function geronimo() {
 				},
 				dataType: "json",
 				success: function (data) {
-					game.map =  data;
+					game.map = data;
 				}
 			});
 		
@@ -435,7 +383,7 @@ function geronimo() {
 
 		/* ------------ Start Pre-Build Walls  ------------ */
 		this.buildWalls = function() {
-			if (this.ghostMode === 0) game.wallColor = "Blue";
+			if (this.ghostMode === 0) game.wallColor = "Black";
 			else game.wallColor = "Red";
 			canvas_walls = document.createElement('canvas');
 			canvas_walls.width = game.canvas.width;
