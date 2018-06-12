@@ -20,7 +20,7 @@ function geronimo() {
 	var game;
 	var canvas_walls, context_walls;
 	var inky, blinky, clyde, pinky;
-	var pelletImage;
+	var pelletImage, dogeImage;
 
 	var mapConfig = "data/map.json";
 
@@ -33,7 +33,6 @@ function geronimo() {
 	function between(x, min, max) {
 		return x >= min && x <= max;
 	}
-
 
 	// Logger
 	var logger = function() {
@@ -1220,7 +1219,22 @@ function checkAppCache() {
 		
 		// --------------- Controls
 		
-		
+		if (window.DeviceOrientationEvent) {
+		    window.addEventListener("deviceorientation", function () {
+		    	$(".game").append(event.beta)
+		        // tilt([event.beta, event.gamma]);
+		    }, true);
+		} else if (window.DeviceMotionEvent) {
+		    window.addEventListener('devicemotion', function () {
+		    	$(".game").append(event.beta)
+		        // tilt([event.acceleration.x * 2, event.acceleration.y * 2]);
+		    }, true);
+		} else {
+		    window.addEventListener("MozOrientation", function () {
+		    	$(".game").append(event.beta)
+		        // tilt([orientation.x * 50, orientation.y * 50]);
+		    }, true);
+		}
 		// Keyboard
 		window.addEventListener('keydown',doKeyDown,true);
 		
@@ -1335,11 +1349,22 @@ function checkAppCache() {
 		game.init(0);
 		logger.disableLogger();
 		
+
+		var imageCollector = function(expectedCount, completeFn){
+		  var receivedCount;
+		  return function(){
+		    if(++receivedCount == expectedCount){
+		    	completeFn()
+		    }
+		  };
+		}();
+		var ic = imageCollector(2, renderContent);
+		dogeImage = new Image()
 		pelletImage = new Image()
+		dogeImage.src = 'img/rsz_doge-open-mouth.jpg'
 		pelletImage.src = 'img/drop_icon.png';
-		pelletImage.onload = function() {
-			renderContent();
-		}
+		pelletImage.onload = ic
+		dogeImage.onload = ic
 
 		});
 		
@@ -1392,14 +1417,20 @@ function checkAppCache() {
 				
 				
 				// Pac Man
-				context.beginPath();
-				context.fillStyle = "Yellow";
-				context.strokeStyle = "Yellow";
 
-				context.arc(pacman.posX+pacman.radius,pacman.posY+pacman.radius,pacman.radius,pacman.angle1*Math.PI,pacman.angle2*Math.PI);
-				context.lineTo(pacman.posX+pacman.radius, pacman.posY+pacman.radius);
-				context.stroke();
-				context.fill();
+				context.drawImage(
+					dogeImage
+					, pacman.posX // top left x
+					, pacman.posY // top left y 
+					, 30, 30); // width, height
+				// context.beginPath();
+				// context.fillStyle = "Yellow";
+				// context.strokeStyle = "Yellow";
+
+				// context.arc(pacman.posX+pacman.radius,pacman.posY+pacman.radius,pacman.radius,pacman.angle1*Math.PI,pacman.angle2*Math.PI);
+				// context.lineTo(pacman.posX+pacman.radius, pacman.posY+pacman.radius);
+				// context.stroke();
+				// context.fill();
 			}
 			
 		}
