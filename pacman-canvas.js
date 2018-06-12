@@ -20,62 +20,11 @@ function geronimo() {
 	var game;
 	var canvas_walls, context_walls;
 	var inky, blinky, clyde, pinky;
+	var pelletImage, dogeImage;
 
 	var mapConfig = "data/map.json";
 
-
-	/* AJAX stuff */
-	function getHighscore() {
-		setTimeout(ajax_get,30);
-	}
-	function ajax_get() {
-		var date = new Date().getTime();
-		$.ajax({
-		   datatype: "json",
-		   type: "GET",
-		   url: "data/db-handler.php",
-		   data: {
-			 timestamp: date,
-			 action: "get"
-			 },
-		   success: function(msg){
-			 $("#highscore-list").text("");
-			 for (var i = 0; i < msg.length; i++) {
-				$("#highscore-list").append("<li>"+msg[i]['name']+"<span id='score'>"+msg[i]['score']+"</span></li>");
-			 }
-		   } 
-		});
-	}
-	function ajax_add(n, s, l) {
-
-		$.ajax({
-		   type: 'POST',
-		   url: 'data/db-handler.php',
-		   data: {
-			 action: 'add',
-			 name: n,
-			 score: s,
-			 level: l
-			 },
-		   dataType: 'json',
-		   success: function(data) {
-				console.log('Highscore added: ' + data);
-				$('#highscore-form').html('<span class="button" id="show-highscore">View Highscore List</span>');
-			},
-			error: function(errorThrown) {
-				console.log(errorThrown);
-			}
-		});
-	}
-
-	function addHighscore() {
-			var name = $("input[type=text]").val();
-            $("#highscore-form").html("Saving highscore...");
-            ajax_add(name ,game.score.score, game.level);
-	}
-	
 	function buildWall(context,gridX,gridY,width,height) {
-		console.log("BuildWall");
 		width = width*2-1;
 		height = height*2-1;
 		context.fillRect(pacman.radius/2+gridX*2*pacman.radius,pacman.radius/2+gridY*2*pacman.radius, width*pacman.radius, height*pacman.radius);
@@ -84,7 +33,6 @@ function geronimo() {
 	function between(x, min, max) {
 		return x >= min && x <= max;
 	}
-
 
 	// Logger
 	var logger = function() {
@@ -363,7 +311,7 @@ function geronimo() {
 				},
 				dataType: "json",
 				success: function (data) {
-					game.map =  data;
+					game.map = data;
 				}
 			});
 		
@@ -435,8 +383,8 @@ function geronimo() {
 
 		/* ------------ Start Pre-Build Walls  ------------ */
 		this.buildWalls = function() {
-			if (this.ghostMode === 0) game.wallColor = "Blue";
-			else game.wallColor = "Red";
+			if (this.ghostMode === 0) game.wallColor = rgba(0,0,0,.2);
+			else game.wallColor = rgba(0,0,0,.2);
 			canvas_walls = document.createElement('canvas');
 			canvas_walls.width = game.canvas.width;
 			canvas_walls.height = game.canvas.height;
@@ -1235,13 +1183,12 @@ function checkAppCache() {
 	// Action starts here:
 	
 	function hideAdressbar() {
-		console.log("hide adressbar");
+		console.log("hide adressbar nate");
 		$("html").scrollTop(1);
 		$("body").scrollTop(1);
 	}
 	
 	$(document).ready(function() {	
-	
 		$.ajaxSetup({ mimeType: "application/json" });
 		
 		$.ajaxSetup({beforeSend: function(xhr){
@@ -1272,7 +1219,22 @@ function checkAppCache() {
 		
 		// --------------- Controls
 		
-		
+		if (window.DeviceOrientationEvent) {
+		    window.addEventListener("deviceorientation", function () {
+		    	$(".game").append(event.beta)
+		        // tilt([event.beta, event.gamma]);
+		    }, true);
+		} else if (window.DeviceMotionEvent) {
+		    window.addEventListener('devicemotion', function () {
+		    	$(".game").append(event.beta)
+		        // tilt([event.acceleration.x * 2, event.acceleration.y * 2]);
+		    }, true);
+		} else {
+		    window.addEventListener("MozOrientation", function () {
+		    	$(".game").append(event.beta)
+		        // tilt([orientation.x * 50, orientation.y * 50]);
+		    }, true);
+		}
 		// Keyboard
 		window.addEventListener('keydown',doKeyDown,true);
 		
@@ -1387,7 +1349,23 @@ function checkAppCache() {
 		game.init(0);
 		logger.disableLogger();
 		
-		renderContent();
+
+		var imageCollector = function(expectedCount, completeFn){
+		  var receivedCount;
+		  return function(){
+		    if(++receivedCount == expectedCount){
+		    	completeFn()
+		    }
+		  };
+		}();
+		var ic = imageCollector(2, renderContent);
+		dogeImage = new Image()
+		pelletImage = new Image()
+		dogeImage.src = 'img/rsz_doge-open-mouth.jpg'
+		pelletImage.src = 'img/drop_icon.png';
+		pelletImage.onload = ic
+		dogeImage.onload = ic
+
 		});
 		
 		function renderContent()
@@ -1396,18 +1374,27 @@ function checkAppCache() {
 
 			// Refresh Score
 			game.score.refresh(".score");
-						
+			
 			// Pills
 			context.beginPath();
-			context.fillStyle = "White";
-			context.strokeStyle = "White";
+			context.fillStyle = rgba(0,0,0,.2);
+			context.strokeStyle = rgba(0,0,0,.2);
 			
 			var dotPosY;
 			$.each(game.map.posY, function(i, item) {
 				dotPosY = this.row;
 			   $.each(this.posX, function() { 
 				   if (this.type == "pill") {
-					context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.pillSize,0*Math.PI,2*Math.PI);
+				   	var col = this.col
+				   	var posY = dotPosY
+
+	   	        	context.drawImage(
+	   	        		pelletImage
+	   	        		, game.toPixelPos(col-1) + (pacman.radius/2) // top left x
+	   	        		, game.toPixelPos(posY-1) + (pacman.radius/2) // top left y 
+	   	        		, 15, 15); // width, height
+
+					// context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.pillSize,0*Math.PI,2*Math.PI);
 					context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
 				   }
 				   else if (this.type == "powerpill") {
@@ -1416,12 +1403,10 @@ function checkAppCache() {
 				   }
 			   }); 
 			});
-			console.log("pps: " + game.nextPowerPillSize());
 			context.fill();
 			
 			// Walls
 			context.drawImage(canvas_walls, 0, 0);
-			
 			
 			if (game.running == true) {
 				// Ghosts
@@ -1432,13 +1417,20 @@ function checkAppCache() {
 				
 				
 				// Pac Man
-				context.beginPath();
-				context.fillStyle = "Yellow";
-				context.strokeStyle = "Yellow";
-				context.arc(pacman.posX+pacman.radius,pacman.posY+pacman.radius,pacman.radius,pacman.angle1*Math.PI,pacman.angle2*Math.PI);
-				context.lineTo(pacman.posX+pacman.radius, pacman.posY+pacman.radius);
-				context.stroke();
-				context.fill();
+
+				context.drawImage(
+					dogeImage
+					, pacman.posX // top left x
+					, pacman.posY // top left y 
+					, 30, 30); // width, height
+				// context.beginPath();
+				// context.fillStyle = "Yellow";
+				// context.strokeStyle = "Yellow";
+
+				// context.arc(pacman.posX+pacman.radius,pacman.posY+pacman.radius,pacman.radius,pacman.angle1*Math.PI,pacman.angle2*Math.PI);
+				// context.lineTo(pacman.posX+pacman.radius, pacman.posY+pacman.radius);
+				// context.stroke();
+				// context.fill();
 			}
 			
 		}
@@ -1477,7 +1469,6 @@ function checkAppCache() {
 			canvas.width = canvas.width;
 			//renderGrid(pacman.radius, "red");
 			renderContent();
-			
 			if (game.dieAnimation == 1) pacman.dieAnimation();
 			if (game.pause != true){
 				// Make changes before next loop
@@ -1486,8 +1477,6 @@ function checkAppCache() {
 				pacman.checkDirectionChange();
 				pacman.checkCollisions();		// has to be the LAST method called on pacman
 
-				
-				
 				blinky.move();
 				inky.move();
 				pinky.move();
@@ -1499,10 +1488,8 @@ function checkAppCache() {
 			// All dots collected?
 			game.check();
 			
-			
 			//requestAnimationFrame(animationLoop);
 			setTimeout(animationLoop, game.refreshRate);
-			
 			
 		}
 
