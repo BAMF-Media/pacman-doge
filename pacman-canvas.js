@@ -27,7 +27,7 @@ function geronimo() {
 	function buildWall(context,gridX,gridY,width,height) {
 		width = width*2-1;
 		height = height*2-1;
-		context.fillRect(pacman.radius/2+gridX*2*pacman.radius,pacman.radius/2+gridY*2*pacman.radius, width*pacman.radius, height*pacman.radius);
+		context.fillRect(pacman.radius/2+gridX*2*pacman.radius, pacman.radius/2+gridY*2*pacman.radius, width*pacman.radius, height*pacman.radius);
 	}
 	
 	function between(x, min, max) {
@@ -312,6 +312,7 @@ function geronimo() {
 				dataType: "json",
 				success: function (data) {
 					game.map = data;
+					game.buildWalls();
 				}
 			});
 		
@@ -383,8 +384,8 @@ function geronimo() {
 
 		/* ------------ Start Pre-Build Walls  ------------ */
 		this.buildWalls = function() {
-			if (this.ghostMode === 0) game.wallColor = rgba(0,0,0,.2);
-			else game.wallColor = rgba(0,0,0,.2);
+			if (this.ghostMode === 0) game.wallColor = "Yellow";
+			else game.wallColor = "Yellow";
 			canvas_walls = document.createElement('canvas');
 			canvas_walls.width = game.canvas.width;
 			canvas_walls.height = game.canvas.height;
@@ -393,6 +394,14 @@ function geronimo() {
 			context_walls.fillStyle = game.wallColor;
 			context_walls.strokeStyle = game.wallColor;
 			
+			$.each(game.map.posY, function(i, item) {
+			   $.each(this.posX, function(j, colData) { 
+			   		if (this.type != "wall") {
+			   			buildWall(context_walls, colData.col - 1, item.row - 1, 1, 1);
+			   		}; 
+			   	}); 
+			});
+
 			//horizontal outer
 			buildWall(context_walls,0,0,18,1);
 			buildWall(context_walls,0,12,18,1);
@@ -459,8 +468,6 @@ function geronimo() {
 
 	game = new Game();
 
-
-
 	function Score() {
 		this.score = 0;
 		this.set = function(i) {
@@ -474,8 +481,6 @@ function geronimo() {
 		};
 		
 	}
-	
-	
 	
 	// used to play sounds during the game
 	var Sound = {};
@@ -1149,7 +1154,6 @@ function geronimo() {
 	}
 	pacman.prototype = new Figure();
 	var pacman = new pacman();
-	game.buildWalls();
 
 	
 // Check if a new cache is available on page load.	 
@@ -1358,13 +1362,13 @@ function checkAppCache() {
 		    }
 		  };
 		}();
-		var ic = imageCollector(2, renderContent);
-		dogeImage = new Image()
+		var ic = imageCollector(1, renderContent);
+		// dogeImage = new Image()
 		pelletImage = new Image()
-		dogeImage.src = 'img/rsz_doge-open-mouth.jpg'
+		// dogeImage.src = 'img/rsz_doge-open-mouth.jpg'
 		pelletImage.src = 'img/drop_icon.png';
 		pelletImage.onload = ic
-		dogeImage.onload = ic
+		// dogeImage.onload = ic
 
 		});
 		
@@ -1377,29 +1381,29 @@ function checkAppCache() {
 			
 			// Pills
 			context.beginPath();
-			context.fillStyle = rgba(0,0,0,.2);
-			context.strokeStyle = rgba(0,0,0,.2);
+			context.fillStyle = "Yellow";
+			context.strokeStyle = "Yellow";
 			
 			var dotPosY;
 			$.each(game.map.posY, function(i, item) {
 				dotPosY = this.row;
-			   $.each(this.posX, function() { 
-				   if (this.type == "pill") {
-				   	var col = this.col
-				   	var posY = dotPosY
+			   $.each(this.posX, function(j, col) { 
 
-	   	        	context.drawImage(
-	   	        		pelletImage
-	   	        		, game.toPixelPos(col-1) + (pacman.radius/2) // top left x
-	   	        		, game.toPixelPos(posY-1) + (pacman.radius/2) // top left y 
-	   	        		, 15, 15); // width, height
+				   	if (this.type == "pill") {
+				   		var col = this.col
+				   		var posY = dotPosY
+
+		   	        	context.drawImage(
+		   	        		pelletImage
+		   	        		, game.toPixelPos(col-1) + (pacman.radius/2) // top left x
+		   	        		, game.toPixelPos(posY-1) + (pacman.radius/2) // top left y 
+		   	        		, 15, 15); // width, height
 
 					// context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.pillSize,0*Math.PI,2*Math.PI);
-					context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
-				   }
-				   else if (this.type == "powerpill") {
-					context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
-					context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
+						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
+				   	} else if (this.type == "powerpill") {
+						context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
+						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
 				   }
 			   }); 
 			});
@@ -1418,11 +1422,11 @@ function checkAppCache() {
 				
 				// Pac Man
 
-				context.drawImage(
-					dogeImage
-					, pacman.posX // top left x
-					, pacman.posY // top left y 
-					, 30, 30); // width, height
+				// context.drawImage(
+				// 	dogeImage
+				// 	, pacman.posX // top left x
+				// 	, pacman.posY // top left y 
+				// 	, 30, 30); // width, height
 				// context.beginPath();
 				// context.fillStyle = "Yellow";
 				// context.strokeStyle = "Yellow";
