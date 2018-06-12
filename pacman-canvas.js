@@ -97,7 +97,7 @@ function geronimo() {
 		};
 		this.gameOver = false;
 		this.canvas = $("#myCanvas").get(0);
-		this.wallColor = "Black";
+		this.wallColor = "Blue";
 		this.width = this.canvas.width;
 		this.height = this.canvas.height;
 
@@ -383,8 +383,8 @@ function geronimo() {
 
 		/* ------------ Start Pre-Build Walls  ------------ */
 		this.buildWalls = function() {
-			if (this.ghostMode === 0) game.wallColor = "Black";
-			else game.wallColor = "Red";
+			if (this.ghostMode === 0) game.wallColor = rgba(0,0,0,.2);
+			else game.wallColor = rgba(0,0,0,.2);
 			canvas_walls = document.createElement('canvas');
 			canvas_walls.width = game.canvas.width;
 			canvas_walls.height = game.canvas.height;
@@ -1377,8 +1377,8 @@ function checkAppCache() {
 			
 			// Pills
 			context.beginPath();
-			context.fillStyle = "Blue";
-			context.strokeStyle = "Blue";
+			context.fillStyle = rgba(0,0,0,.2);
+			context.strokeStyle = rgba(0,0,0,.2);
 			
 			var dotPosY;
 			$.each(game.map.posY, function(i, item) {
