@@ -1381,16 +1381,17 @@ function checkAppCache() {
 		    }
 		  };
 		}();
-		var ic = imageCollector(2, renderContent);
+		var ic = imageCollector(3, renderContent);
 		dogeLeft = new Image()
-		dogeBottom
+		dogeBottom = new Image()
 		pelletImage = new Image()
-		dogeLeft.src = 'img/doge-left.gif'
+		dogeLeft.src = 'img/doge-left.gif';
+		dogeBottom.src = 'img/doge-bottom.gif';
 		pelletImage.src = 'img/drop_icon.png';
 		pelletImage.onload = ic
 		dogeLeft.onload = ic
-
-		});
+		dogeBottom.onload = ic
+	});
 		
 		function renderContent()
 		{
@@ -1443,7 +1444,7 @@ function checkAppCache() {
 				// Pac Man
 
 				context.drawImage(
-					dogeLeft
+					pacman.direction.name == "down" ? dogeBottom : dogeLeft
 					, pacman.posX // top left x
 					, pacman.posY // top left y 
 					, 30, 30); // width, height
