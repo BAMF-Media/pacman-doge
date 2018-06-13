@@ -20,7 +20,7 @@ function geronimo() {
 	var game;
 	var canvas_walls, context_walls;
 	var inky, blinky, clyde, pinky;
-	var pelletImage, dogeImage;
+	var pelletImage, dogeLeft, dogeBottom;
 
 	var mapConfig = "data/map.json";
 
@@ -384,25 +384,44 @@ function geronimo() {
 
 		/* ------------ Start Pre-Build Walls  ------------ */
 		this.buildWalls = function() {
-			if (this.ghostMode === 0) game.wallColor = "Yellow";
-			else game.wallColor = "Yellow";
+			if (this.ghostMode === 0) game.wallColor = "White";
+			else game.wallColor = "White";
 			canvas_walls = document.createElement('canvas');
 			canvas_walls.width = game.canvas.width;
 			canvas_walls.height = game.canvas.height;
 			context_walls = canvas_walls.getContext("2d");
 
 			context_walls.fillStyle = game.wallColor;
-			context_walls.strokeStyle = game.wallColor;
-			
+			// context_walls.strokeStyle = "Blue";
+			// context_walls.stroke()
+			// var coordCache = {}
+
 			$.each(game.map.posY, function(i, item) {
 			   $.each(this.posX, function(j, colData) { 
 			   		if (this.type != "wall") {
-			   			buildWall(context_walls, colData.col - 1, item.row - 1, 1, 1);
+
+			   // 			var centerX = colData.col - 1
+			   // 			var centerY = item.row - 1
+			   // 			// var cacheStr = centerX + "" + centerY
+			   // 			// if (coordCache[cacheStr]) { return }
+			   			
+ 			  //  			buildWall(context_walls, centerX - 0.55, centerY - 0.55, 1.1, 1.1);
+			   // 			buildWall(context_walls, centerX - 0.55, centerY, 1.1, 1.1);
+			   // 			buildWall(context_walls, centerX - 0.55, centerY + 0.55, 1.1, 1.1);
+
+			   // 			buildWall(context_walls, centerX, centerY - 0.55, 1.1, 1.1);
+			   // 			buildWall(context_walls, centerX, centerY + 0.55, 1, 1.1);
+
+						// buildWall(context_walls, centerX + 0.55, centerY - 0.55, 1, 1);
+			   // 			buildWall(context_walls, centerX + 0.55, centerY, 1, 1);
+			   // 			buildWall(context_walls, centerX + 0.55, centerY + 0.55, 1, 1);
+
+			   // 			buildWall(context_walls, centerX, centerY, 1, 1);
 			   		}; 
 			   	}); 
 			});
-
-			//horizontal outer
+			// buildWall(context_walls, 0, 0, 6, 1)
+			// //horizontal outer
 			buildWall(context_walls,0,0,18,1);
 			buildWall(context_walls,0,12,18,1);
 			
@@ -1362,13 +1381,14 @@ function checkAppCache() {
 		    }
 		  };
 		}();
-		var ic = imageCollector(1, renderContent);
-		// dogeImage = new Image()
+		var ic = imageCollector(2, renderContent);
+		dogeLeft = new Image()
+		dogeBottom
 		pelletImage = new Image()
-		// dogeImage.src = 'img/rsz_doge-open-mouth.jpg'
+		dogeLeft.src = 'img/doge-left.gif'
 		pelletImage.src = 'img/drop_icon.png';
 		pelletImage.onload = ic
-		// dogeImage.onload = ic
+		dogeLeft.onload = ic
 
 		});
 		
@@ -1381,8 +1401,9 @@ function checkAppCache() {
 			
 			// Pills
 			context.beginPath();
-			context.fillStyle = "Yellow";
-			context.strokeStyle = "Yellow";
+			context.fillStyle = "White";
+			context.strokeStyle = "White";
+			context.globalCompositeOperation='destination-over';
 			
 			var dotPosY;
 			$.each(game.map.posY, function(i, item) {
@@ -1419,17 +1440,16 @@ function checkAppCache() {
 				inky.draw(context);
 				clyde.draw(context);
 				
-				
 				// Pac Man
 
-				// context.drawImage(
-				// 	dogeImage
-				// 	, pacman.posX // top left x
-				// 	, pacman.posY // top left y 
-				// 	, 30, 30); // width, height
+				context.drawImage(
+					dogeLeft
+					, pacman.posX // top left x
+					, pacman.posY // top left y 
+					, 30, 30); // width, height
 				// context.beginPath();
-				// context.fillStyle = "Yellow";
-				// context.strokeStyle = "Yellow";
+				// context.fillStyle = "White";
+				// context.strokeStyle = "White";
 
 				// context.arc(pacman.posX+pacman.radius,pacman.posY+pacman.radius,pacman.radius,pacman.angle1*Math.PI,pacman.angle2*Math.PI);
 				// context.lineTo(pacman.posX+pacman.radius, pacman.posY+pacman.radius);
