@@ -64,15 +64,22 @@ input[type="text"]:hover, input[type="text"]:focus, input[type="password"]:hover
 #highscore-list {}
 #score { float: right; }
 
+#space-background {
+	background: url(img/space-9.jpg) no-repeat center;
+}
+
 #myCanvas { 
 	border: none;
 	display: block;
-	background: url(img/space-9.jpg) no-repeat center;
+	background: url(img/walls.png) no-repeat center;
 	width: 100%;
 	height: auto;
 }
 
-#canvas-container { position: relative;}
+#canvas-container { 
+	position: relative;
+	background-color: rgba(0,19,57,0.8);
+}
 #canvas-overlay-container {
 	position: absolute;
 	background: rgba(0,0,0,0.7);
