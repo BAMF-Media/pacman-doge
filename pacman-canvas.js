@@ -91,10 +91,8 @@ function geronimo() {
 		this.map;
 		this.pillCount;				// number of pills
 		this.monsters;
-		this.level = 1;
-		this.refreshLevel = function(h) {
-			$(h).html("Lvl: "+this.level);
-		};
+		this.level = 2;
+		
 		this.gameOver = false;
 		this.canvas = $("#myCanvas").get(0);
 		this.wallColor = "Blue";
@@ -128,19 +126,19 @@ function geronimo() {
 			console.log("ghost frigthened");
 			this.ghostFrightened = true;
 			this.ghostFrightenedTimer = 240;
-			inky.dazzle();	
+			// inky.dazzle();	
 			pinky.dazzle();	
 			blinky.dazzle();	
-			clyde.dazzle();
+			// clyde.dazzle();
 		};
 
 		this.endGhostFrightened = function() {
 			console.log("ghost frigthened end");		
 			this.ghostFrightened = false;
-			inky.undazzle();
+			// inky.undazzle();
 			pinky.undazzle();
 			blinky.undazzle();
-			clyde.undazzle();
+			// clyde.undazzle();
 			};
 		
 			
@@ -166,9 +164,9 @@ function geronimo() {
 
 				game.buildWalls();
 
-				inky.reverseDirection();
+				// inky.reverseDirection();
 				pinky.reverseDirection();
-				clyde.reverseDirection();
+				// clyde.reverseDirection();
 				blinky.reverseDirection();
 				}
 		};
@@ -208,7 +206,7 @@ function geronimo() {
 			this.level++;
             console.log("Level "+game.level);
 			game.showMessage("Level "+game.level, this.getLevelTitle() + "<br/>(Click to continue!)");
-			game.refreshLevel(".level");
+			// game.refreshLevel(".level");
 			this.init(1);
 		};
 
@@ -333,7 +331,7 @@ function geronimo() {
 				this.score.refresh(".score");
 				pacman.lives = 3;
 				game.level = 1;
-				this.refreshLevel(".level");
+				// this.refreshLevel(".level");
 				game.gameOver = false;
 				}
 			pacman.reset();
@@ -348,21 +346,21 @@ function geronimo() {
 			// initalize Ghosts, avoid memory flooding
 			if (pinky === null || pinky === undefined) {
 				pinky = new Ghost("pinky",7,5,'img/pinky.svg',2,2);
-				inky = new Ghost("inky",8,5,'img/inky.svg',13,11);
+				// inky = new Ghost("inky",8,5,'img/inky.svg',13,11);
 				blinky = new Ghost("blinky",9,5,'img/blinky.svg',13,0);
-				clyde = new Ghost("clyde",10,5,'img/clyde.svg',2,11);
+				// clyde = new Ghost("clyde",10,5,'img/clyde.svg',2,11);
 			}
 			else {
 				//console.log("ghosts reset");
 				pinky.reset();
-				inky.reset();
+				// inky.reset();
 				blinky.reset();
-				clyde.reset();
+				// clyde.reset();
 			}
 			blinky.start();	// blinky is the first to leave ghostHouse
-			inky.start();
+			// inky.start();
 			pinky.start();
-			clyde.start();
+			// clyde.start();
 		};
 
 		this.check = function() {
@@ -720,30 +718,30 @@ function geronimo() {
 					var tX = pacman.getGridPosX();
 					var tY = pacman.getGridPosY();
 					break;
-				
-				// target: 
-				case "inky":
-					var tX = pacman.getGridPosX() + 2*pacman.direction.dirX;
-					var tY = pacman.getGridPosY() + 2*pacman.direction.dirY;
-					var vX = tX - blinky.getGridPosX();
-					var vY = tY - blinky.getGridPosY();
-					tX = Math.abs(blinky.getGridPosX() + vX*2);
-					tY = Math.abs(blinky.getGridPosY() + vY*2);
-					break;
-				
-				// target: pacman, until pacman is closer than 5 grid fields, then back to scatter
-				case "clyde":
-					var tX = pacman.getGridPosX();
-					var tY = pacman.getGridPosY();
-					var dist = Math.sqrt(Math.pow((pX-tX),2) + Math.pow((pY - tY),2));
-					
-					if (dist < 5) {
-						tX = this.gridBaseX;
-						tY = this.gridBaseY;
-					}
-					break;
-				
 				}
+				// target: 
+				// case "inky":
+				// 	var tX = pacman.getGridPosX() + 2*pacman.direction.dirX;
+				// 	var tY = pacman.getGridPosY() + 2*pacman.direction.dirY;
+				// 	var vX = tX - blinky.getGridPosX();
+				// 	var vY = tY - blinky.getGridPosY();
+				// 	tX = Math.abs(blinky.getGridPosX() + vX*2);
+				// 	tY = Math.abs(blinky.getGridPosY() + vY*2);
+				// 	break;
+				
+				// // target: pacman, until pacman is closer than 5 grid fields, then back to scatter
+				// case "clyde":
+				// 	var tX = pacman.getGridPosX();
+				// 	var tY = pacman.getGridPosY();
+				// 	var dist = Math.sqrt(Math.pow((pX-tX),2) + Math.pow((pY - tY),2));
+					
+				// 	if (dist < 5) {
+				// 		tX = this.gridBaseX;
+				// 		tY = this.gridBaseY;
+				// 	}
+				// 	break;
+				
+				// }
 			}	
 			
 			
@@ -1037,18 +1035,18 @@ function geronimo() {
 			this.beastMode = true;
 			this.beastModeTimer = 240;
 			//console.log("Beast Mode activated!");
-			inky.dazzle();
+			// inky.dazzle();
 			pinky.dazzle();
 			blinky.dazzle();
-			clyde.dazzle();
+			// clyde.dazzle();
 		};
 		this.disableBeastMode = function() { 
 			this.beastMode = false; 
 			//console.log("Beast Mode is over!");
-			inky.undazzle();
+			// inky.undazzle();
 			pinky.undazzle();
 			blinky.undazzle();
-			clyde.undazzle();
+			// clyde.undazzle();
 			};
 		this.move = function() {
 		
@@ -1124,9 +1122,9 @@ function geronimo() {
 		this.dieFinal = function() {
 			this.reset();
 			pinky.reset();
-			inky.reset();
+			// inky.reset();
 			blinky.reset();
-			clyde.reset();
+			// clyde.reset();
     		this.lives--;
 	        console.log("pacman died, "+this.lives+" lives left");
 	    	if (this.lives <= 0) {
@@ -1215,22 +1213,22 @@ function checkAppCache() {
 		
 		// --------------- Controls
 		
-		if (window.DeviceOrientationEvent) {
-		    window.addEventListener("deviceorientation", function () {
-		    	$(".game").append(Math.round(event.beta * 100) / 100, Math.round(event.gamma * 100) / 100)
-		        // tilt([event.beta, event.gamma]);
-		    }, true);
-		} else if (window.DeviceMotionEvent) {
-		    window.addEventListener('devicemotion', function () {
-		    	$(".game").append(event.beta)
-		        // tilt([event.acceleration.x * 2, event.acceleration.y * 2]);
-		    }, true);
-		} else {
-		    window.addEventListener("MozOrientation", function () {
-		    	$(".game").append(event.beta)
-		        // tilt([orientation.x * 50, orientation.y * 50]);
-		    }, true);
-		}
+		// if (window.DeviceOrientationEvent) {
+		//     window.addEventListener("deviceorientation", function () {
+		//     	$(".game").append(Math.round(event.beta * 100) / 100, Math.round(event.gamma * 100) / 100)
+		//         // tilt([event.beta, event.gamma]);
+		//     }, true);
+		// } else if (window.DeviceMotionEvent) {
+		//     window.addEventListener('devicemotion', function () {
+		//     	$(".game").append(event.beta)
+		//         // tilt([event.acceleration.x * 2, event.acceleration.y * 2]);
+		//     }, true);
+		// } else {
+		//     window.addEventListener("MozOrientation", function () {
+		//     	$(".game").append(event.beta)
+		//         // tilt([orientation.x * 50, orientation.y * 50]);
+		//     }, true);
+		// }
 		// Keyboard
 		window.addEventListener('keydown',doKeyDown,true);
 		
@@ -1418,8 +1416,8 @@ function checkAppCache() {
 				// Ghosts
 				pinky.draw(context);
 				blinky.draw(context);
-				inky.draw(context);
-				clyde.draw(context);
+				// inky.draw(context);
+				// clyde.draw(context);
 				
 				// Pac Man
 
@@ -1483,9 +1481,9 @@ function checkAppCache() {
 				pacman.checkCollisions();		// has to be the LAST method called on pacman
 
 				blinky.move();
-				inky.move();
+				// inky.move();
 				pinky.move();
-				clyde.move();
+				// clyde.move();
 
 				game.checkGhostMode();
 			}
