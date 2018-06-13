@@ -20,7 +20,7 @@ function geronimo() {
 	var game;
 	var canvas_walls, context_walls;
 	var inky, blinky, clyde, pinky;
-	var pelletImage, dogeLeft, dogeBottom;
+	var pelletImage, superChargeImage, dogeLeft, dogeBottom;
 
 	var mapConfig = "data/map.json";
 
@@ -392,34 +392,7 @@ function geronimo() {
 			context_walls = canvas_walls.getContext("2d");
 
 			context_walls.fillStyle = game.wallColor;
-			// context_walls.strokeStyle = "Blue";
-			// context_walls.stroke()
-			// var coordCache = {}
 
-			$.each(game.map.posY, function(i, item) {
-			   $.each(this.posX, function(j, colData) { 
-			   		if (this.type != "wall") {
-
-			   // 			var centerX = colData.col - 1
-			   // 			var centerY = item.row - 1
-			   // 			// var cacheStr = centerX + "" + centerY
-			   // 			// if (coordCache[cacheStr]) { return }
-			   			
- 			  //  			buildWall(context_walls, centerX - 0.55, centerY - 0.55, 1.1, 1.1);
-			   // 			buildWall(context_walls, centerX - 0.55, centerY, 1.1, 1.1);
-			   // 			buildWall(context_walls, centerX - 0.55, centerY + 0.55, 1.1, 1.1);
-
-			   // 			buildWall(context_walls, centerX, centerY - 0.55, 1.1, 1.1);
-			   // 			buildWall(context_walls, centerX, centerY + 0.55, 1, 1.1);
-
-						// buildWall(context_walls, centerX + 0.55, centerY - 0.55, 1, 1);
-			   // 			buildWall(context_walls, centerX + 0.55, centerY, 1, 1);
-			   // 			buildWall(context_walls, centerX + 0.55, centerY + 0.55, 1, 1);
-
-			   // 			buildWall(context_walls, centerX, centerY, 1, 1);
-			   		}; 
-			   	}); 
-			});
 			// buildWall(context_walls, 0, 0, 6, 1)
 			// //horizontal outer
 			buildWall(context_walls,0,0,18,1);
@@ -1244,7 +1217,7 @@ function checkAppCache() {
 		
 		if (window.DeviceOrientationEvent) {
 		    window.addEventListener("deviceorientation", function () {
-		    	$(".game").append(event.beta)
+		    	$(".game").append(Math.round(event.beta * 100) / 100, Math.round(event.gamma * 100) / 100)
 		        // tilt([event.beta, event.gamma]);
 		    }, true);
 		} else if (window.DeviceMotionEvent) {
@@ -1381,16 +1354,20 @@ function checkAppCache() {
 		    }
 		  };
 		}();
-		var ic = imageCollector(3, renderContent);
+		var ic = imageCollector(4, renderContent);
 		dogeLeft = new Image()
 		dogeBottom = new Image()
 		pelletImage = new Image()
+		superChargeImage = new Image()
 		dogeLeft.src = 'img/doge-left.gif';
 		dogeBottom.src = 'img/doge-bottom.gif';
 		pelletImage.src = 'img/drop_icon.png';
+		superChargeImage.src = 'img/supercharge.png';
 		pelletImage.onload = ic
+		superChargeImage.onload = ic
 		dogeLeft.onload = ic
 		dogeBottom.onload = ic
+
 	});
 		
 		function renderContent()
@@ -1410,21 +1387,24 @@ function checkAppCache() {
 			$.each(game.map.posY, function(i, item) {
 				dotPosY = this.row;
 			   $.each(this.posX, function(j, col) { 
-
+			   		var col = this.col
+			   		var posY = dotPosY
 				   	if (this.type == "pill") {
-				   		var col = this.col
-				   		var posY = dotPosY
-
 		   	        	context.drawImage(
 		   	        		pelletImage
 		   	        		, game.toPixelPos(col-1) + (pacman.radius/2) // top left x
 		   	        		, game.toPixelPos(posY-1) + (pacman.radius/2) // top left y 
 		   	        		, 15, 15); // width, height
 
-					// context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.pillSize,0*Math.PI,2*Math.PI);
+					
 						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
 				   	} else if (this.type == "powerpill") {
-						context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
+						// context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
+						context.drawImage(
+							superChargeImage
+							, game.toPixelPos(col-1) + (pacman.radius/2) - 2.5 // top left x
+							, game.toPixelPos(posY-1) + (pacman.radius/2) - 2.5 // top left y 
+							, 20, 20); // width, height
 						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
 				   }
 			   }); 
