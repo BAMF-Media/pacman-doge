@@ -1306,9 +1306,9 @@ function checkAppCache() {
 		    game.showContent('highscore-content'); 
 			getHighscore();
 		});
-		$(document).on('click','.button#instructions',function(event) {
-		    game.showContent('instructions-content');
-		});
+		// $(document).on('click','.button#instructions',function(event) {
+		//     game.showContent('instructions-content');
+		// });
 		$(document).on('click','.button#info',function(event) {
 		    game.showContent('info-content'); 
 		});
