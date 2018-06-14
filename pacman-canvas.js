@@ -20,7 +20,7 @@ function geronimo() {
 	var game;
 	var canvas_walls, context_walls;
 	var inky, blinky, clyde, pinky;
-	var pelletImage, superChargeImage, dogeLeft, dogeBottom;
+	var pelletImage, superChargeImage, dogeLeft, dogeBottom, dogeBack, dogeGif;
 
 	var mapConfig = "data/map.json";
 
@@ -311,9 +311,14 @@ function geronimo() {
 				success: function (data) {
 					game.map = data;
 					game.buildWalls();
+					game.continueInit(state);
 				}
 			});
 		
+			
+		};
+
+		this.continueInit = function(state) {
 			var temp = 0;
 			$.each(this.map.posY, function(i, item) {
 			   $.each(this.posX, function() { 
@@ -325,7 +330,7 @@ function geronimo() {
 			});
 			
 			this.pillCount = temp;
-	
+			
 			if (state === 0) {
 				this.score.set(0);
 				this.score.refresh(".score");
@@ -361,7 +366,7 @@ function geronimo() {
 			// inky.start();
 			pinky.start();
 			// clyde.start();
-		};
+		}
 
 		this.check = function() {
 		if ((this.pillCount === 0) && game.running) {
@@ -1352,13 +1357,18 @@ function checkAppCache() {
 		    }
 		  };
 		}();
-		var ic = imageCollector(4, renderContent);
+		var ic = imageCollector(6, renderContent);
 		dogeLeft = new Image()
 		dogeBottom = new Image()
+		dogeBack = new Image()
+		dogeGif = new Image()
 		pelletImage = new Image()
 		superChargeImage = new Image()
+
 		dogeLeft.src = 'img/doge-left.gif';
 		dogeBottom.src = 'img/doge-bottom.gif';
+		dogeBack.src = 'img/doge-back.png';
+		dogeGif.src = 'img/doge-group.png'
 		// pelletImage.src = 'img/drop_icon.png';
 		pelletImage.src = 'img/d.svg';
 		// superChargeImage.src = 'img/supercharge.png';
@@ -1367,13 +1377,47 @@ function checkAppCache() {
 		superChargeImage.onload = ic
 		dogeLeft.onload = ic
 		dogeBottom.onload = ic
+		dogeBack.onload = ic
+		dogeGif.onload = ic
+
+		var img_obj = {
+		    'source': null,
+		    'current': 0,
+		    'total_frames': 3,
+		    'width': 119,
+		    'height': 135
+		};
+		
+		var img = new Image();
+		img.onload = function () { // Triggered when image has finished loading.
+		    img_obj.source = img;  // we set the image source for our object.
+		}
+		img.src = 'img/doge-group.png'; // contains an image of size 256x16
+		                              // with 16 frames of size 16x16
+
+		function draw_anim(context, x, y, iobj) { // context is the canvas 2d context.
+		    if (iobj.source != null)
+		        context.drawImage(iobj.source, 0, iobj.current * iobj.height,
+		                          iobj.width, iobj.height,
+		                          x, y, iobj.width, iobj.height);
+		    iobj.current = (iobj.current + 1) % iobj.total_frames;
+		                   // incrementing the current frame and assuring animation loop
+		}
+		// on_body_load()
+		// function on_body_load() {
+		//     setInterval((function (c, i) {
+		//                 return function () {
+		//                     draw_anim(c, 10, 10, i);
+		//                 };
+		//     })(context, img_obj), 400);
+		// }
 
 	});
-		
+		var frame = 0
 		function renderContent()
 		{
 			//context.save()
-
+			frame += 1
 			// Refresh Score
 			game.score.refresh(".score");
 			
@@ -1381,7 +1425,6 @@ function checkAppCache() {
 			context.beginPath();
 			context.fillStyle = "#00e288";
 			context.strokeStyle = "#00e288";
-			// context.globalCompositeOperation='destination-over';
 			
 			var dotPosY;
 			$.each(game.map.posY, function(i, item) {
@@ -1389,24 +1432,28 @@ function checkAppCache() {
 			   $.each(this.posX, function(j, col) { 
 			   		var col = this.col
 			   		var posY = dotPosY
+			   		context.globalCompositeOperation='destination-over';
 				   	if (this.type == "pill") {
-				   		context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
+				   		context.arc(game.toPixelPos(this.col-1)+pacman.radius-1,game.toPixelPos(dotPosY-1)+pacman.radius-1,game.powerpillSizeCurrent+2,0*Math.PI,2*Math.PI);
 		   	        	context.drawImage(
 		   	        		pelletImage
-		   	        		, game.toPixelPos(col-1) + (pacman.radius/2) // top left x
+		   	        		, game.toPixelPos(col-1) + (pacman.radius/2) + 2 // top left x
 		   	        		, game.toPixelPos(posY-1) + (pacman.radius/2) // top left y 
-		   	        		, 15, 15); // width, height
-					
+		   	        		, 8.25, 12); // width, height
 						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
+						context.fill()
+						context.beginPath()
 				   	} else if (this.type == "powerpill") {
-						context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent + 5,0*Math.PI,2*Math.PI);
+						context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent + 6,0*Math.PI,2*Math.PI);
 						context.drawImage(
 							superChargeImage
-							, game.toPixelPos(col-1) + (pacman.radius/2) - 2.5 // top left x
+							, game.toPixelPos(col-1) + (pacman.radius/2) + 2.5 // top left x
 							, game.toPixelPos(posY-1) + (pacman.radius/2) - 2.5 // top left y 
-							, 20, 20); // width, height
+							, 10, 19); // width, height
 						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
 				   }
+				   context.globalCompositeOperation = "source-over"
+
 			   }); 
 			});
 			context.fill();
@@ -1422,9 +1469,22 @@ function checkAppCache() {
 				// clyde.draw(context);
 				
 				// Pac Man
+			
+				var img = dogeLeft;
+				switch (pacman.direction.name) {
+					case "down":
+						img = dogeBottom;
+						break;
+					case "up":
+						img = dogeBack;
+						break;
+				}
+				// context.drawImage(dogeGif, 0, ((frame) % 3) * 135,
+				//                   119, 135,
+				//                   pacman.posX, pacman.posY, 30, 34);
 
 				context.drawImage(
-					pacman.direction.name == "down" ? dogeBottom : dogeLeft
+					img
 					, pacman.posX // top left x
 					, pacman.posY // top left y 
 					, 30, 30); // width, height
