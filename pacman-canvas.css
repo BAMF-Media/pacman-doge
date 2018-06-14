@@ -71,7 +71,11 @@ input[type="text"]:hover, input[type="text"]:focus, input[type="password"]:hover
 #myCanvas { 
 	border: none;
 	display: block;
-	background: url(img/walls.png) no-repeat center;
+	background-image:    url(img/walls.png);
+    background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+    background-position: center center;    
+	/*background: url(img/walls.png) no-repeat center;*/
 	width: 100%;
 	height: auto;
 }

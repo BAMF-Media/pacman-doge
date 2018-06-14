@@ -1359,8 +1359,10 @@ function checkAppCache() {
 		superChargeImage = new Image()
 		dogeLeft.src = 'img/doge-left.gif';
 		dogeBottom.src = 'img/doge-bottom.gif';
-		pelletImage.src = 'img/drop_icon.png';
-		superChargeImage.src = 'img/supercharge.png';
+		// pelletImage.src = 'img/drop_icon.png';
+		pelletImage.src = 'img/d.svg';
+		// superChargeImage.src = 'img/supercharge.png';
+		superChargeImage.src = 'img/bolt.svg';
 		pelletImage.onload = ic
 		superChargeImage.onload = ic
 		dogeLeft.onload = ic
@@ -1377,8 +1379,8 @@ function checkAppCache() {
 			
 			// Pills
 			context.beginPath();
-			context.fillStyle = "White";
-			context.strokeStyle = "White";
+			context.fillStyle = "#00e288";
+			context.strokeStyle = "#00e288";
 			// context.globalCompositeOperation='destination-over';
 			
 			var dotPosY;
@@ -1388,16 +1390,16 @@ function checkAppCache() {
 			   		var col = this.col
 			   		var posY = dotPosY
 				   	if (this.type == "pill") {
+				   		context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
 		   	        	context.drawImage(
 		   	        		pelletImage
 		   	        		, game.toPixelPos(col-1) + (pacman.radius/2) // top left x
 		   	        		, game.toPixelPos(posY-1) + (pacman.radius/2) // top left y 
 		   	        		, 15, 15); // width, height
-
 					
 						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
 				   	} else if (this.type == "powerpill") {
-						// context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
+						context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent + 5,0*Math.PI,2*Math.PI);
 						context.drawImage(
 							superChargeImage
 							, game.toPixelPos(col-1) + (pacman.radius/2) - 2.5 // top left x
