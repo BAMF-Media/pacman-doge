@@ -165,43 +165,29 @@
 
 <!-- main game content -->
 <div class="content" id="game-content">
-
-		<!-- Google AdSense -->
-		<div id="adsense">
-			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<ins class="adsbygoogle"
-			     style="display:inline-block;width:320px;height:50px"
-			     data-ad-client="ca-pub-0176206735745791"
-			     data-ad-slot="6492298622"></ins>
-			<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script>
-		</div>
-	
-	
 	<!-- main game content -->
 	<div class="game wrapper">
 	
 		<div class="score">Score:</div>
-		<div class="level">Lvl:</div>
 		<div class="lives">Lives: </div>
 		
 		<div class="controlSound">
 			<img src="img/audio-icon-mute.png" id="mute">
 		</div>
 		<!-- canvas is splitted into 18x13 fields -->
-		<div id="canvas-container">
-			<div id="canvas-overlay-container">
-				<div id="canvas-overlay-content">
-					<div id="title">Pacman Canvas</div>
-					<div><p id="text">Click to Play</p></div>
+		<div id="space-background">
+			<div id="canvas-container">
+				<div id="canvas-overlay-container">
+					<div id="canvas-overlay-content">
+						<div id="title">Pacman Canvas</div>
+						<div><p id="text">Click to Play</p></div>
+					</div>
 				</div>
+				<canvas id="myCanvas" width="540" height="390">
+				<p>Canvas not supported</p>
+				</canvas>
 			</div>
-			<canvas id="myCanvas" width="540" height="390">
-			<p>Canvas not supported</p>
-			</canvas>
 		</div>
-
 		<div class="controls" id="game-buttons">
 		<!-- Will be moved to Instructions 
 		<p class="nomobile">Use W-A-S-D keys to navigate Pac-Man</p>
@@ -223,10 +209,11 @@
 		<!-- Game Menu -->		
 		<div class="controls" id="menu-buttons">
 			<ul>
-				<li class="button" id="newGame">New Game</li>
-				<li class="button" id="highscore">Highscore</li>
-				<li class="button" id="instructions">Instructions</li>
-				<li class="button" id="info">Info</li>
+				<li>INSTRUCTIONS:</li>
+				<li><span>Step 1: </span>Play PacMeme and Earn Cash Prizes</li>
+				<li><span>Step 2: </span>Check your email for custom download link</li>
+				<li><span>Step 3: </span>Redeem your rewards in the Drop app!</li>
+				<li><span>Step 4: </span>Praise the Internet Gods - You got free money!</li>
 			</ul>
 			
 		</div>

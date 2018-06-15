@@ -42,7 +42,7 @@ html, body {
     min-height: 100%;
     height: 100%;
 	line-height: 23px;
-	background: url('img/bg-pattern-black.png') repeat;
+	background: #fff;
     text-align: center;
 	}
 body {
@@ -137,11 +137,14 @@ ul.nav a, ul.nav a:link, ul.nav a:active, ul.nav a:visited, ul.nav a:hover, ul.n
 .header, .content, .footer { 
 	margin: 30px;
 	max-width: 700px;
-	background: rgba(0,0,0,0.4);
-	background/*\**/: url(img/bg/black_40.png)\9;
-	color: rgba(255,255,255,0.9);
-	color/*\**/: rgb(250,250,250)\9;
-	padding: 4em;
+	background-color: white;
+	/*background: rgba(0,0,0,0.4);*/
+	/*background/*\*: url(img/bg/black_40.png)\9;*/
+	/*color: rgba(255,255,255,0.9);
+	color: rgb(250,250,250)\9;
+	*/
+	color: black;
+	padding: 2em 4em;
     width: 700px;
 -webkit-box-shadow: 2px 2px 5px rgba(50, 50, 50, 0.75);
 -moz-box-shadow:    2px 2px 5px rgba(50, 50, 50, 0.75);

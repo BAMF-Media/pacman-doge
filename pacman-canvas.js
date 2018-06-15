@@ -20,7 +20,7 @@ function geronimo() {
 	var game;
 	var canvas_walls, context_walls;
 	var inky, blinky, clyde, pinky;
-	var pelletImage, dogeLeft, dogeBottom;
+	var pelletImage, superChargeImage, dogeLeft, dogeBottom, dogeBack, dogeGif;
 
 	var mapConfig = "data/map.json";
 
@@ -91,10 +91,8 @@ function geronimo() {
 		this.map;
 		this.pillCount;				// number of pills
 		this.monsters;
-		this.level = 1;
-		this.refreshLevel = function(h) {
-			$(h).html("Lvl: "+this.level);
-		};
+		this.level = 2;
+		
 		this.gameOver = false;
 		this.canvas = $("#myCanvas").get(0);
 		this.wallColor = "Blue";
@@ -128,19 +126,19 @@ function geronimo() {
 			console.log("ghost frigthened");
 			this.ghostFrightened = true;
 			this.ghostFrightenedTimer = 240;
-			inky.dazzle();	
+			// inky.dazzle();	
 			pinky.dazzle();	
 			blinky.dazzle();	
-			clyde.dazzle();
+			// clyde.dazzle();
 		};
 
 		this.endGhostFrightened = function() {
 			console.log("ghost frigthened end");		
 			this.ghostFrightened = false;
-			inky.undazzle();
+			// inky.undazzle();
 			pinky.undazzle();
 			blinky.undazzle();
-			clyde.undazzle();
+			// clyde.undazzle();
 			};
 		
 			
@@ -166,9 +164,9 @@ function geronimo() {
 
 				game.buildWalls();
 
-				inky.reverseDirection();
+				// inky.reverseDirection();
 				pinky.reverseDirection();
-				clyde.reverseDirection();
+				// clyde.reverseDirection();
 				blinky.reverseDirection();
 				}
 		};
@@ -208,7 +206,7 @@ function geronimo() {
 			this.level++;
             console.log("Level "+game.level);
 			game.showMessage("Level "+game.level, this.getLevelTitle() + "<br/>(Click to continue!)");
-			game.refreshLevel(".level");
+			// game.refreshLevel(".level");
 			this.init(1);
 		};
 
@@ -313,9 +311,14 @@ function geronimo() {
 				success: function (data) {
 					game.map = data;
 					game.buildWalls();
+					game.continueInit(state);
 				}
 			});
 		
+			
+		};
+
+		this.continueInit = function(state) {
 			var temp = 0;
 			$.each(this.map.posY, function(i, item) {
 			   $.each(this.posX, function() { 
@@ -327,13 +330,13 @@ function geronimo() {
 			});
 			
 			this.pillCount = temp;
-	
+			
 			if (state === 0) {
 				this.score.set(0);
 				this.score.refresh(".score");
 				pacman.lives = 3;
 				game.level = 1;
-				this.refreshLevel(".level");
+				// this.refreshLevel(".level");
 				game.gameOver = false;
 				}
 			pacman.reset();
@@ -348,22 +351,22 @@ function geronimo() {
 			// initalize Ghosts, avoid memory flooding
 			if (pinky === null || pinky === undefined) {
 				pinky = new Ghost("pinky",7,5,'img/pinky.svg',2,2);
-				inky = new Ghost("inky",8,5,'img/inky.svg',13,11);
+				// inky = new Ghost("inky",8,5,'img/inky.svg',13,11);
 				blinky = new Ghost("blinky",9,5,'img/blinky.svg',13,0);
-				clyde = new Ghost("clyde",10,5,'img/clyde.svg',2,11);
+				// clyde = new Ghost("clyde",10,5,'img/clyde.svg',2,11);
 			}
 			else {
 				//console.log("ghosts reset");
 				pinky.reset();
-				inky.reset();
+				// inky.reset();
 				blinky.reset();
-				clyde.reset();
+				// clyde.reset();
 			}
 			blinky.start();	// blinky is the first to leave ghostHouse
-			inky.start();
+			// inky.start();
 			pinky.start();
-			clyde.start();
-		};
+			// clyde.start();
+		}
 
 		this.check = function() {
 		if ((this.pillCount === 0) && game.running) {
@@ -392,94 +395,67 @@ function geronimo() {
 			context_walls = canvas_walls.getContext("2d");
 
 			context_walls.fillStyle = game.wallColor;
-			// context_walls.strokeStyle = "Blue";
-			// context_walls.stroke()
-			// var coordCache = {}
 
-			$.each(game.map.posY, function(i, item) {
-			   $.each(this.posX, function(j, colData) { 
-			   		if (this.type != "wall") {
-
-			   // 			var centerX = colData.col - 1
-			   // 			var centerY = item.row - 1
-			   // 			// var cacheStr = centerX + "" + centerY
-			   // 			// if (coordCache[cacheStr]) { return }
-			   			
- 			  //  			buildWall(context_walls, centerX - 0.55, centerY - 0.55, 1.1, 1.1);
-			   // 			buildWall(context_walls, centerX - 0.55, centerY, 1.1, 1.1);
-			   // 			buildWall(context_walls, centerX - 0.55, centerY + 0.55, 1.1, 1.1);
-
-			   // 			buildWall(context_walls, centerX, centerY - 0.55, 1.1, 1.1);
-			   // 			buildWall(context_walls, centerX, centerY + 0.55, 1, 1.1);
-
-						// buildWall(context_walls, centerX + 0.55, centerY - 0.55, 1, 1);
-			   // 			buildWall(context_walls, centerX + 0.55, centerY, 1, 1);
-			   // 			buildWall(context_walls, centerX + 0.55, centerY + 0.55, 1, 1);
-
-			   // 			buildWall(context_walls, centerX, centerY, 1, 1);
-			   		}; 
-			   	}); 
-			});
 			// buildWall(context_walls, 0, 0, 6, 1)
 			// //horizontal outer
-			buildWall(context_walls,0,0,18,1);
-			buildWall(context_walls,0,12,18,1);
+			// buildWall(context_walls,0,0,18,1);
+			// buildWall(context_walls,0,12,18,1);
 			
-			// vertical outer
-			buildWall(context_walls,0,0,1,6);
-			buildWall(context_walls,0,7,1,6);
-			buildWall(context_walls,17,0,1,6);
-			buildWall(context_walls,17,7,1,6);
+			// // vertical outer
+			// buildWall(context_walls,0,0,1,6);
+			// buildWall(context_walls,0,7,1,6);
+			// buildWall(context_walls,17,0,1,6);
+			// buildWall(context_walls,17,7,1,6);
 			
-			// ghost base
-			buildWall(context_walls,7,4,1,1);
-			buildWall(context_walls,6,5,1,2);
-			buildWall(context_walls,10,4,1,1);
-			buildWall(context_walls,11,5,1,2);
-			buildWall(context_walls,6,6,6,1);
+			// // ghost base
+			// buildWall(context_walls,7,4,1,1);
+			// buildWall(context_walls,6,5,1,2);
+			// buildWall(context_walls,10,4,1,1);
+			// buildWall(context_walls,11,5,1,2);
+			// buildWall(context_walls,6,6,6,1);
 			
 			// ghost base door
 			context_walls.fillRect(8*2*pacman.radius,pacman.radius/2+4*2*pacman.radius+5, 4*pacman.radius, 1);
 			
 			// single blocks
-			buildWall(context_walls,4,0,1,2);
-			buildWall(context_walls,13,0,1,2);
+			// buildWall(context_walls,4,0,1,2);
+			// buildWall(context_walls,13,0,1,2);
 			
-			buildWall(context_walls,2,2,1,2);
-			buildWall(context_walls,6,2,2,1);
-			buildWall(context_walls,15,2,1,2);
-			buildWall(context_walls,10,2,2,1);
+			// buildWall(context_walls,2,2,1,2);
+			// buildWall(context_walls,6,2,2,1);
+			// buildWall(context_walls,15,2,1,2);
+			// buildWall(context_walls,10,2,2,1);
 			
-			buildWall(context_walls,2,3,2,1);
-			buildWall(context_walls,14,3,2,1);
-			buildWall(context_walls,5,3,1,1);
-			buildWall(context_walls,12,3,1,1);
-			buildWall(context_walls,3,3,1,3);
-			buildWall(context_walls,14,3,1,3);
+			// buildWall(context_walls,2,3,2,1);
+			// buildWall(context_walls,14,3,2,1);
+			// buildWall(context_walls,5,3,1,1);
+			// buildWall(context_walls,12,3,1,1);
+			// buildWall(context_walls,3,3,1,3);
+			// buildWall(context_walls,14,3,1,3);
 			
-			buildWall(context_walls,3,4,1,1);
-			buildWall(context_walls,14,4,1,1);
+			// buildWall(context_walls,3,4,1,1);
+			// buildWall(context_walls,14,4,1,1);
 			
-			buildWall(context_walls,0,5,2,1);
-			buildWall(context_walls,3,5,2,1);
-			buildWall(context_walls,16,5,2,1);
-			buildWall(context_walls,13,5,2,1);
+			// buildWall(context_walls,0,5,2,1);
+			// buildWall(context_walls,3,5,2,1);
+			// buildWall(context_walls,16,5,2,1);
+			// buildWall(context_walls,13,5,2,1);
 			
-			buildWall(context_walls,0,7,2,2);
-			buildWall(context_walls,16,7,2,2);
-			buildWall(context_walls,3,7,2,2);
-			buildWall(context_walls,13,7,2,2);
+			// buildWall(context_walls,0,7,2,2);
+			// buildWall(context_walls,16,7,2,2);
+			// buildWall(context_walls,3,7,2,2);
+			// buildWall(context_walls,13,7,2,2);
 			
-			buildWall(context_walls,4,8,2,2);
-			buildWall(context_walls,12,8,2,2);
-			buildWall(context_walls,5,8,3,1);
-			buildWall(context_walls,10,8,3,1);
+			// buildWall(context_walls,4,8,2,2);
+			// buildWall(context_walls,12,8,2,2);
+			// buildWall(context_walls,5,8,3,1);
+			// buildWall(context_walls,10,8,3,1);
 			
-			buildWall(context_walls,2,10,1,1);
-			buildWall(context_walls,15,10,1,1);
-			buildWall(context_walls,7,10,4,1);
-			buildWall(context_walls,4,11,2,2);
-			buildWall(context_walls,12,11,2,2);
+			// buildWall(context_walls,2,10,1,1);
+			// buildWall(context_walls,15,10,1,1);
+			// buildWall(context_walls,7,10,4,1);
+			// buildWall(context_walls,4,11,2,2);
+			// buildWall(context_walls,12,11,2,2);
 			/* ------------ End Pre-Build Walls  ------------ */
 		};
 
@@ -747,30 +723,30 @@ function geronimo() {
 					var tX = pacman.getGridPosX();
 					var tY = pacman.getGridPosY();
 					break;
-				
-				// target: 
-				case "inky":
-					var tX = pacman.getGridPosX() + 2*pacman.direction.dirX;
-					var tY = pacman.getGridPosY() + 2*pacman.direction.dirY;
-					var vX = tX - blinky.getGridPosX();
-					var vY = tY - blinky.getGridPosY();
-					tX = Math.abs(blinky.getGridPosX() + vX*2);
-					tY = Math.abs(blinky.getGridPosY() + vY*2);
-					break;
-				
-				// target: pacman, until pacman is closer than 5 grid fields, then back to scatter
-				case "clyde":
-					var tX = pacman.getGridPosX();
-					var tY = pacman.getGridPosY();
-					var dist = Math.sqrt(Math.pow((pX-tX),2) + Math.pow((pY - tY),2));
-					
-					if (dist < 5) {
-						tX = this.gridBaseX;
-						tY = this.gridBaseY;
-					}
-					break;
-				
 				}
+				// target: 
+				// case "inky":
+				// 	var tX = pacman.getGridPosX() + 2*pacman.direction.dirX;
+				// 	var tY = pacman.getGridPosY() + 2*pacman.direction.dirY;
+				// 	var vX = tX - blinky.getGridPosX();
+				// 	var vY = tY - blinky.getGridPosY();
+				// 	tX = Math.abs(blinky.getGridPosX() + vX*2);
+				// 	tY = Math.abs(blinky.getGridPosY() + vY*2);
+				// 	break;
+				
+				// // target: pacman, until pacman is closer than 5 grid fields, then back to scatter
+				// case "clyde":
+				// 	var tX = pacman.getGridPosX();
+				// 	var tY = pacman.getGridPosY();
+				// 	var dist = Math.sqrt(Math.pow((pX-tX),2) + Math.pow((pY - tY),2));
+					
+				// 	if (dist < 5) {
+				// 		tX = this.gridBaseX;
+				// 		tY = this.gridBaseY;
+				// 	}
+				// 	break;
+				
+				// }
 			}	
 			
 			
@@ -1064,18 +1040,18 @@ function geronimo() {
 			this.beastMode = true;
 			this.beastModeTimer = 240;
 			//console.log("Beast Mode activated!");
-			inky.dazzle();
+			// inky.dazzle();
 			pinky.dazzle();
 			blinky.dazzle();
-			clyde.dazzle();
+			// clyde.dazzle();
 		};
 		this.disableBeastMode = function() { 
 			this.beastMode = false; 
 			//console.log("Beast Mode is over!");
-			inky.undazzle();
+			// inky.undazzle();
 			pinky.undazzle();
 			blinky.undazzle();
-			clyde.undazzle();
+			// clyde.undazzle();
 			};
 		this.move = function() {
 		
@@ -1151,9 +1127,9 @@ function geronimo() {
 		this.dieFinal = function() {
 			this.reset();
 			pinky.reset();
-			inky.reset();
+			// inky.reset();
 			blinky.reset();
-			clyde.reset();
+			// clyde.reset();
     		this.lives--;
 	        console.log("pacman died, "+this.lives+" lives left");
 	    	if (this.lives <= 0) {
@@ -1242,22 +1218,22 @@ function checkAppCache() {
 		
 		// --------------- Controls
 		
-		if (window.DeviceOrientationEvent) {
-		    window.addEventListener("deviceorientation", function () {
-		    	$(".game").append(event.beta)
-		        // tilt([event.beta, event.gamma]);
-		    }, true);
-		} else if (window.DeviceMotionEvent) {
-		    window.addEventListener('devicemotion', function () {
-		    	$(".game").append(event.beta)
-		        // tilt([event.acceleration.x * 2, event.acceleration.y * 2]);
-		    }, true);
-		} else {
-		    window.addEventListener("MozOrientation", function () {
-		    	$(".game").append(event.beta)
-		        // tilt([orientation.x * 50, orientation.y * 50]);
-		    }, true);
-		}
+		// if (window.DeviceOrientationEvent) {
+		//     window.addEventListener("deviceorientation", function () {
+		//     	$(".game").append(Math.round(event.beta * 100) / 100, Math.round(event.gamma * 100) / 100)
+		//         // tilt([event.beta, event.gamma]);
+		//     }, true);
+		// } else if (window.DeviceMotionEvent) {
+		//     window.addEventListener('devicemotion', function () {
+		//     	$(".game").append(event.beta)
+		//         // tilt([event.acceleration.x * 2, event.acceleration.y * 2]);
+		//     }, true);
+		// } else {
+		//     window.addEventListener("MozOrientation", function () {
+		//     	$(".game").append(event.beta)
+		//         // tilt([orientation.x * 50, orientation.y * 50]);
+		//     }, true);
+		// }
 		// Keyboard
 		window.addEventListener('keydown',doKeyDown,true);
 		
@@ -1335,9 +1311,9 @@ function checkAppCache() {
 		    game.showContent('highscore-content'); 
 			getHighscore();
 		});
-		$(document).on('click','.button#instructions',function(event) {
-		    game.showContent('instructions-content');
-		});
+		// $(document).on('click','.button#instructions',function(event) {
+		//     game.showContent('instructions-content');
+		// });
 		$(document).on('click','.button#info',function(event) {
 		    game.showContent('info-content'); 
 		});
@@ -1381,51 +1357,103 @@ function checkAppCache() {
 		    }
 		  };
 		}();
-		var ic = imageCollector(2, renderContent);
+		var ic = imageCollector(6, renderContent);
 		dogeLeft = new Image()
-		dogeBottom
+		dogeBottom = new Image()
+		dogeBack = new Image()
+		dogeGif = new Image()
 		pelletImage = new Image()
-		dogeLeft.src = 'img/doge-left.gif'
-		pelletImage.src = 'img/drop_icon.png';
-		pelletImage.onload = ic
-		dogeLeft.onload = ic
+		superChargeImage = new Image()
 
-		});
+		dogeLeft.src = 'img/doge-left.gif';
+		dogeBottom.src = 'img/doge-bottom.gif';
+		dogeBack.src = 'img/doge-back.png';
+		dogeGif.src = 'img/doge-group.png'
+		// pelletImage.src = 'img/drop_icon.png';
+		pelletImage.src = 'img/d.svg';
+		// superChargeImage.src = 'img/supercharge.png';
+		superChargeImage.src = 'img/bolt.svg';
+		pelletImage.onload = ic
+		superChargeImage.onload = ic
+		dogeLeft.onload = ic
+		dogeBottom.onload = ic
+		dogeBack.onload = ic
+		dogeGif.onload = ic
+
+		var img_obj = {
+		    'source': null,
+		    'current': 0,
+		    'total_frames': 3,
+		    'width': 119,
+		    'height': 135
+		};
 		
+		var img = new Image();
+		img.onload = function () { // Triggered when image has finished loading.
+		    img_obj.source = img;  // we set the image source for our object.
+		}
+		img.src = 'img/doge-group.png'; // contains an image of size 256x16
+		                              // with 16 frames of size 16x16
+
+		function draw_anim(context, x, y, iobj) { // context is the canvas 2d context.
+		    if (iobj.source != null)
+		        context.drawImage(iobj.source, 0, iobj.current * iobj.height,
+		                          iobj.width, iobj.height,
+		                          x, y, iobj.width, iobj.height);
+		    iobj.current = (iobj.current + 1) % iobj.total_frames;
+		                   // incrementing the current frame and assuring animation loop
+		}
+		// on_body_load()
+		// function on_body_load() {
+		//     setInterval((function (c, i) {
+		//                 return function () {
+		//                     draw_anim(c, 10, 10, i);
+		//                 };
+		//     })(context, img_obj), 400);
+		// }
+
+	});
+		var frame = 0
 		function renderContent()
 		{
 			//context.save()
-
+			frame += 1
 			// Refresh Score
 			game.score.refresh(".score");
 			
 			// Pills
 			context.beginPath();
-			context.fillStyle = "White";
-			context.strokeStyle = "White";
-			context.globalCompositeOperation='destination-over';
+			context.fillStyle = "#00e288";
+			context.strokeStyle = "#00e288";
 			
 			var dotPosY;
 			$.each(game.map.posY, function(i, item) {
 				dotPosY = this.row;
 			   $.each(this.posX, function(j, col) { 
-
+			   		var col = this.col
+			   		var posY = dotPosY
+			   		context.globalCompositeOperation='destination-over';
 				   	if (this.type == "pill") {
-				   		var col = this.col
-				   		var posY = dotPosY
-
+				   		context.arc(game.toPixelPos(this.col-1)+pacman.radius-1,game.toPixelPos(dotPosY-1)+pacman.radius-1,game.powerpillSizeCurrent+2,0*Math.PI,2*Math.PI);
 		   	        	context.drawImage(
 		   	        		pelletImage
-		   	        		, game.toPixelPos(col-1) + (pacman.radius/2) // top left x
+		   	        		, game.toPixelPos(col-1) + (pacman.radius/2) + 2 // top left x
 		   	        		, game.toPixelPos(posY-1) + (pacman.radius/2) // top left y 
-		   	        		, 15, 15); // width, height
-
-					// context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.pillSize,0*Math.PI,2*Math.PI);
+		   	        		, 8.25, 12); // width, height
 						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
+						context.fill()
+						context.beginPath()
 				   	} else if (this.type == "powerpill") {
-						context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent,0*Math.PI,2*Math.PI);
+						context.arc(game.toPixelPos(this.col-1)+pacman.radius,game.toPixelPos(dotPosY-1)+pacman.radius,game.powerpillSizeCurrent + 6,0*Math.PI,2*Math.PI);
+						context.drawImage(
+							superChargeImage
+							, game.toPixelPos(col-1) + (pacman.radius/2) + 2.5 // top left x
+							, game.toPixelPos(posY-1) + (pacman.radius/2) - 2.5 // top left y 
+							, 10, 19); // width, height
 						context.moveTo(game.toPixelPos(this.col-1), game.toPixelPos(dotPosY-1));
 				   }
+				   context.globalCompositeOperation = "source-over"
+
 			   }); 
 			});
 			context.fill();
@@ -1437,13 +1465,26 @@ function checkAppCache() {
 				// Ghosts
 				pinky.draw(context);
 				blinky.draw(context);
-				inky.draw(context);
-				clyde.draw(context);
+				// inky.draw(context);
+				// clyde.draw(context);
 				
 				// Pac Man
+			
+				var img = dogeLeft;
+				switch (pacman.direction.name) {
+					case "down":
+						img = dogeBottom;
+						break;
+					case "up":
+						img = dogeBack;
+						break;
+				}
+				// context.drawImage(dogeGif, 0, ((frame) % 3) * 135,
+				//                   119, 135,
+				//                   pacman.posX, pacman.posY, 30, 34);
 
 				context.drawImage(
-					dogeLeft
+					img
 					, pacman.posX // top left x
 					, pacman.posY // top left y 
 					, 30, 30); // width, height
@@ -1502,9 +1543,9 @@ function checkAppCache() {
 				pacman.checkCollisions();		// has to be the LAST method called on pacman
 
 				blinky.move();
-				inky.move();
+				// inky.move();
 				pinky.move();
-				clyde.move();
+				// clyde.move();
 
 				game.checkGhostMode();
 			}
